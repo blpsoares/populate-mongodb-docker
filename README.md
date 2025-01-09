@@ -98,12 +98,12 @@ After up container with our custom image, you have two options:
 
 OR
 
-2. Exec `docker exec -it mongo-fakedb bun populate`
+2. Exec `docker exec -it mongo-fakedb bun src/app.js` //COPY THIS COMMAND AND PASTE O YOUR SHELL
 
 After execute the populate command, you can see this on your terminal:
 
 ```bash
-⬢ docker exec -it mongo-fakedb bun populate
+⬢ docker exec -it mongo-fakedb bun src/app.js
 
 $ bun src/app.js
 
@@ -118,7 +118,7 @@ complexCollection2 | ※⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍�
 <br>
 
 To access database for mongosh: \
-`docker exec -it mongo-fakedb mongosh`
+`docker exec -it mongo-fakedb mongosh` || `docker exec -it mongo-fakedb mongosh mongodb://localhost:27017/<yourDatabaseName>>`
 
 ```bash
 test> show dbs
