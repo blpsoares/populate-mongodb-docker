@@ -35,7 +35,7 @@ Project structure
 
 ```json
   "scripts": {
-    "populate": "bun src/app.js",
+    "populate": "docker exec -it mongo-fakedb bun src/app.js",
     "up:db": "docker-compose up --build -d",
     "down:db": "docker-compose down",
     "clean:container": "docker rm -f $(docker ps -a -q) && docker rmi -f populate-mongodb-docker_populate-fakedb",
