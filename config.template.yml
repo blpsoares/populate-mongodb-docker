@@ -1,0 +1,10 @@
+dbUri: "mongodb://localhost:27017" # Your connection string
+dbName: 'your_database_name' # Your database name
+simpleCollections: # Your array with collection names (you too can send in normal array format: ["simpleCollection", ...])
+  - "simpleCollection"
+complexCollections: # Your array with collection names (you too can send in normal array format: ["complexCollection", "complexCollection2" ...])
+  - "complexCollection"
+  - "complexCollection2"
+collectionSize: 1e4 # Quantity of documents for each collection
+batchSize: 100  # Batch size for each document recording batch
+concurrency: 10 # Number of concurrency async operations

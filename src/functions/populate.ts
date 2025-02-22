@@ -5,16 +5,7 @@ import {
   generateSimpleDocument,
 } from "./generate-documents.js";
 import { insertDocuments } from "./insert-documents.js";
-import type { Db } from "mongodb";
-
-export type Options = {
-  simpleCollections: string[];
-  complexCollections?: string[];
-  collectionSize: number;
-  batchSize: number;
-  db: Db;
-  concurrency: number;
-}
+import type { Options } from "../types/index.js";
 
 export const populateDB = async (options: Options) => {
   let simpleCollectionsPromises: Promise<void>[] = []

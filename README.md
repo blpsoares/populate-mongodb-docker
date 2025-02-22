@@ -5,22 +5,29 @@ Project structure
 ```bash
 .
 ├── node_modules
+├── bin
+│   └── populatedb
 ├── src
-│   ├── services
-│   │   ├── populate.js
-│   │   ├── insert-documents.js
-│   │   └── generate-documents.js
-│   ├── db
-│   │   └── conn.js
-│   └── app.js
-├── package.json
-├── jsconfig.json
-├── docker-compose.yml
-├── bun.lockb
+│   ├── db
+│   │   └── conn.ts
+│   ├── functions
+│   │   ├── generate-documents.ts
+│   │   ├── insert-documents.ts
+│   │   ├── parseYml.ts
+│   │   └── populate.ts
+│   ├── types
+│   │   └── index.ts
+│   └── app.ts
+├── Dockerfile
 ├── README.md
-└── Dockerfile
+├── bun.lockb
+├── config.yml
+├── docker-compose.yml
+├── package-lock.json
+├── package.json
+└── tsconfig.json
 
-3 directories, 11 files
+5 directories, 16 files
 ```
 
 ---
@@ -31,55 +38,86 @@ Project structure
 
 ---
 
+### Binary file to populate populatedb
+This project has a binary file of the application, to add this bin how a command run:
+`npm run cp:bin` or `bun cp:bin`
+Or, in your shell
+`cp ./bin/populatedb  ~/.local/bin`
+
 ### package.json scripts
 
 ```json
   "scripts": {
-    "populate": "docker exec -it mongo-fakedb bun src/app.js",
+    "populate": "docker exec -it populate-fakedb bun src/app.js",
     "up:db": "docker-compose up --build -d",
     "down:db": "docker-compose down",
-    "clean:container": "docker rm -f $(docker ps -a -q) && docker rmi -f populate-mongodb-docker_populate-fakedb",
+    "clean:container": "docker rm -f $(docker ps -a -q) && docker rmi -f populate-mongodb-docker_fake-db",
     "clean:volume": "docker volume rm -f populate-mongodb-docker_mongo-data",
-    "clean:all":"bun run clean:container && bun run clean:volume"
+    "clean:all": "bun run clean:container && bun run clean:volume",
+    "gen:bin": "bun build ./src/app.ts --compile --outfile ./bin/populatedb && chmod +x ./bin/populatedb",
+    "cp:bin": "cp ./bin/populatedb  ~/.local/bin && echo 'ALREADY TO USE: populatedb'",
+    "run": "docker run -d --name database -p 27017:27017 mongo && cp ./bin/populatedb  ~/.local/bin && populatedb"
   },
 
 ```
 
 ## Scripts description
 
-#### `populate`
-
-- **Command**: `bun src/app.js`
-- **Description**: Runs `app.js` to populate MongoDB with options defined in the main scope.
-
 #### `up:db`
 
-- **Command**: `docker-compose up --build -d`
-- **Description**: Builds and starts Docker containers in the background.
+- **Command**: `docker run -d --name populate-fakedb -v mongo-data:/data/db -p 27017:27017 mongo`
+- **Description**: start docker container <populate-fakedb> in background with a mongo-data volume.
 
 #### `down:db`
 
-- **Command**: `docker-compose down`
-- **Description**: Stops and removes all Docker containers, networks, and volumes.
+- **Command**: `docker stop populate-fakedb`
+- **Description**: stop docker container <populate-fakedb>.
 
-#### `clean:container`
+#### `rm:container`
 
-- **Command**: `docker rm -f $(docker ps -a -q) && docker rmi -f populate-mongodb-docker_populate-fakedb`
-- **Description**: Forcefully removes all stopped containers and a specific Docker image.
+- **Command**: `docker rm -f populate-fakedb`
+- **Description**: remove docker container <populate-fakedb>
 
-#### `clean:volume`
+#### `rm:volume`
 
 - **Command**: `docker volume rm -f populate-mongodb-docker_mongo-data`
-- **Description**: Forcefully removes the MongoDB data volume.
+- **Description**: remove volume <mongo-data>
 
-#### `clean:all`
+#### `rm:all`
 
-- **Command**: `bun run clean:container && bun run clean:volume`
-- **Description**: Removes all stopped containers, a specific Docker image, and the MongoDB data volume.
+- **Command**: `npm run clean:container && bun run clean:volume`
+- **Description**: remove volume and container <populate-fakedb> <mongo-data>.
+
+#### `gen:bin`
+
+- **Command**: `bun build ./src/app.ts --compile --outfile ./bin/populatedb && chmod +x ./bin/populatedb`
+- **Description**: Generate bin file of this project to runs `populatedb` command.
+
+#### `cp:bin`
+
+- **Command**: `cp ./bin/populatedb  ~/.local/bin && echo 'ALREADY TO USE: populatedb'`
+- **Description**: Copy binary file to `~/.local/bin`.
+
+#### `populate`
+
+- **Command**: `npm run up:db && npm run cp:bin`
+- **Description**: Create a docker container and run populatedb bin (config.yml needs created in your current directory).
 
 ---
 
 ### Commands to run project
+
+## OPTION 1 - FAST OPTION
+```javascript
+// RUNS WITH BINARY AND NEW LOCAL DATABASE
+{
+    "populate": "npm run up:db && cp ./bin/populatedb  ~/.local/bin && populatedb"
+}
+
+```
+
+## OPTION 2 - NEED DOCKER COMPOSE - THIS OPTION IS RECOMMENDED IF YOU WANT TO KEEP CONTAINER DATA
+
 
 ```javascript
 {
@@ -98,12 +136,12 @@ After up container with our custom image, you have two options:
 
 OR
 
-2. Exec `docker exec -it mongo-fakedb bun src/app.js`
+2. Exec `docker exec -it populate-fakedb bun src/app.js`
 
-After execute the populate command, you can see this on your terminal:
+After populate the populate command, you can see this on your terminal:
 
 ```bash
-⬢ docker exec -it mongo-fakedb bun src/app.js
+⬢ docker exec -it populate-fakedb bun src/app.js
 
 $ bun src/app.js
 
@@ -118,7 +156,7 @@ complexCollection2 | ※⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍⁍�
 <br>
 
 To access database for mongosh: \
-`docker exec -it mongo-fakedb mongosh` || `docker exec -it mongo-fakedb mongosh mongodb://localhost:27017/<yourDatabaseName>>`
+`docker exec -it populate-fakedb mongosh` || `docker exec -it populate-fakedb mongosh mongodb://localhost:27017/<yourDatabaseName>>`
 
 ```bash
 test> show dbs
@@ -142,19 +180,31 @@ If you want change:
 - batch size to insert documents on db
 - database name
 
-You can edit options on src>app.js
+You can edit options on config.yml file on source of this project
 
-```javascript
-const db = client.db("myDB"); // Your database name
+```YAML
+dbUri: "mongodb://localhost:27017" # Your MongoDB connection string
+dbName: 'dbTeste' # Database name
+simpleCollections: # Array with some collection names. (This field is required)
+  - "simpleCollection"
+complexCollections: # Array with some collection names. (This field is not required)
+  - "complexCollection"
+  - "complexCollection2"
+collectionSize: 1e4 # Quantity of documents for each collection
+batchSize: 100 # Batch size for each document recording batch
+concurrency: 10 # Number of concurrency async operations
 
-const options = {
-  simpleCollections: simpleCollections, // Array to generate simple collections
-  complexCollections: complexCollections, // Array to generate complex collections
-  collectionSize: 1e6, // Quantity documents for each collection
-  batchSize: 5000, // Batch size to insert documents on db
-  db, // Database variable
-  concurrency: 2 // Max concurrency promises
-};
+# Required field:
+#   - dbUri
+#   - dbName
+#   - simpleCollections
+
+# Default values in not required fields
+#   - collectionSize = 1e4 (10.000)
+#   - batchSize = 1100
+#   - concurrency = 4
+
+
 ```
 
 ### Notes
@@ -164,9 +214,4 @@ simpleCollections collections do not have document sublevels, so in terms of sto
 complexCollections
 They have sublevels and end up being heavier and larger.
 
-TODO:
-
-- Change options object to ENVIRONMENT variables on docker-compose.yml
-- Change database name on app.js to ENVIRONMENT variable on docker-compose.yml
-
-**Application and image version: 1.0.0**
+**Application and image version: 1.1.0**

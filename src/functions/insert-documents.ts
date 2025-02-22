@@ -1,6 +1,14 @@
-export const insertDocuments = async (collectionName, documentGeneratorFn, options, multiBar) => {
-  const collectionSize = options.collectionSize ?? 1e6;
-  const batchSize = options.batchSize ?? 1000;
+import type { MultiBar } from "cli-progress";
+import type { Options } from "../types";
+
+export const insertDocuments = async (
+  collectionName: string,
+  documentGeneratorFn: () => Record<string, unknown>,
+  options: Options,
+  multiBar: MultiBar
+) => {
+  const collectionSize = options.collectionSize;
+  const batchSize = options.batchSize;
   const progressBar = multiBar.create(collectionSize, 0, { collectionName });
   const { db } = options;
 

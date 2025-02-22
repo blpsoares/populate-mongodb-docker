@@ -21,20 +21,18 @@ export const generateComplexDocument = () => {
     foundingDate: chance.date(),
     ceoName: chance.name(),
     industry: chance.word(),
-    financials: { yearlyRevenue: {} },
+    financials: {},
     stockPrice: chance.floating({ min: 10, max: 500, fixed: 2 }),
     description: chance.sentence(),
   };
 
-  for (let j = 1; j <= 4; j++) {
-    complexDocument.financials[`year${2018 + j}`] = {};
-    for (let k = 1; k <= 5; k++) {
-      complexDocument.financials[`year${2018 + j}`][`Q${k}`] = chance.floating({
-        min: 1000,
-        max: 1000000,
-        fixed: 2,
-      });
-    }
+  for (let year = 2019; year <= 2022; year++) {
+    complexDocument.financials[`year${year}`] = {
+      Q1: chance.floating({ min: 1000, max: 1000000, fixed: 2 }),
+      Q2: chance.floating({ min: 1000, max: 1000000, fixed: 2 }),
+      Q3: chance.floating({ min: 1000, max: 1000000, fixed: 2 }),
+      Q4: chance.floating({ min: 1000, max: 1000000, fixed: 2 }),
+    };
   }
 
   return complexDocument;

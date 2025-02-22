@@ -22,7 +22,7 @@ const configSchema = z.object({
   concurrency: z.number().min(1).default(4),
 });
 
-export async function parseYamlToJson(filePath) {
+export async function parseYamlToJson(filePath: string) {
   if (!fs.existsSync(filePath)) throw new Error(`File ${filePath} not found\nPlease, create config.yml file on the source of this project`);
   const fileContent = await fs.promises.readFile(filePath, 'utf8');
   const jsonData = yaml.load(fileContent);
