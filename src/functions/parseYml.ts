@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import yaml from 'js-yaml';
 import { z } from 'zod';
 
@@ -32,7 +32,8 @@ export async function parseYamlToJson(filePath) {
       if(error instanceof z.ZodError) {
         console.error('Error parsing config.yml file');
         throw error.errors
-      }else{
+      // biome-ignore lint/style/noUselessElse: <explanation>
+      } else{
         console.error('Unexpected error')
         throw error
       }

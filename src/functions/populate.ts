@@ -5,10 +5,20 @@ import {
   generateSimpleDocument,
 } from "./generate-documents.js";
 import { insertDocuments } from "./insert-documents.js";
+import type { Db } from "mongodb";
 
-export const populateDB = async (options) => {
-  let simpleCollectionsPromises = [],
-    complexCollectionsPromises = [];
+export type Options = {
+  simpleCollections: string[];
+  complexCollections?: string[];
+  collectionSize: number;
+  batchSize: number;
+  db: Db;
+  concurrency: number;
+}
+
+export const populateDB = async (options: Options) => {
+  let simpleCollectionsPromises: Promise<void>[] = []
+  let complexCollectionsPromises: Promise<void>[] = [];
   const { simpleCollections, complexCollections, concurrency } = options;
 
   const limiter = new Bottleneck({

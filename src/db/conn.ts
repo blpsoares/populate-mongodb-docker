@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { MongoClient } from 'mongodb';
 
-export const conn = async (URI) => {
+export const conn = async (URI: string) => {
   console.log(chalk.yellow.bold("[ Connecting to database ]", URI));
   const client = new MongoClient(URI);
   try {
