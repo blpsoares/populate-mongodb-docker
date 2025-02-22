@@ -9,10 +9,10 @@ import { insertDocuments } from "./insert-documents.js";
 export const populateDB = async (options) => {
   let simpleCollectionsPromises = [],
     complexCollectionsPromises = [];
-  const { simpleCollections, complexCollections, concurrence } = options;
+  const { simpleCollections, complexCollections, concurrency } = options;
 
   const limiter = new Bottleneck({
-    maxConcurrent: concurrence ?? 3,
+    maxConcurrent: concurrency ?? 3,
   });
 
   const multiBar = new cliProgress.MultiBar({

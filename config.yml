@@ -1,0 +1,10 @@
+dbUri: "mongodb://localhost:27017"
+dbName: 'dbTeste'
+simpleCollections:
+  - "simpleCollection"
+complexCollections:
+  - "complexCollection"
+  - "complexCollection2"
+collectionSize: 1e4
+batchSize: 100
+concurrency: 10

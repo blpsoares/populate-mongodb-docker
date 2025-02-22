@@ -153,7 +153,7 @@ const options = {
   collectionSize: 1e6, // Quantity documents for each collection
   batchSize: 5000, // Batch size to insert documents on db
   db, // Database variable
-  concurrence: 2 // Max concurrence promises 
+  concurrency: 2 // Max concurrency promises
 };
 ```
 

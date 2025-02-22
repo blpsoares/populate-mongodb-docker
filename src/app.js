@@ -1,24 +1,40 @@
+import chalk from "chalk";
 import { conn } from "./db/conn.js";
-import { populateDB } from "./services/populate.js";
+import { parseYamlToJson } from "./functions/parseYml.js";
+import { populateDB } from "./functions/populate.js";
 
-const simpleCollections = ["pessoas", "funcionarios", "usuarios", "cadastros"];
-const complexCollections = ["complexCollection1", "complexCollection2"];
+(async () => {
+  const {
+    batchSize,
+    collectionSize,
+    concurrency,
+    dbName,
+    dbUri,
+    simpleCollections,
+    complexCollections,
+  } = await parseYamlToJson("config.yml");
 
-const main = async () => {
-  const client = await conn();
-  const db = client.db(process.env.DB_NAME ?? "myDatabase");
+  const client = await conn(dbUri);
+  const db = client.db(dbName);
 
   const options = {
-    simpleCollections: simpleCollections,
-    complexCollections: complexCollections,
-    collectionSize: 1e5,
-    batchSize: 1100,
+    simpleCollections,
+    complexCollections,
+    collectionSize,
+    batchSize,
     db,
-    concurrence: 4,
+    concurrency,
   };
+
+  console.info(chalk.blueBright.bold("Starting to populate the database with the following options:"));
+  console.log(chalk.bold.yellow("DB URI: "), chalk.yellowBright(dbUri));
+  console.log(chalk.bold.yellow("DB Name: "), chalk.yellowBright(dbName));
+  console.log(chalk.bold.yellow("Batch Size: "), chalk.yellowBright(batchSize));
+  console.log(chalk.bold.yellow("Collection Size: "), chalk.yellowBright(collectionSize));
+  console.log(chalk.bold.yellow("Concurrency: "), chalk.yellowBright(concurrency));
+  console.log(chalk.bold.yellow("Simple Collections: "), chalk.yellowBright(simpleCollections));
+  console.log(chalk.bold.yellow("Complex Collections: "), chalk.yellowBright(complexCollections));
 
   await populateDB(options);
   client.close();
-};
-
-await main();
+})();

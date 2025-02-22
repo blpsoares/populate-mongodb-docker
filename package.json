@@ -13,9 +13,12 @@
   },
   "dependencies": {
     "bottleneck": "^2.19.5",
+    "chalk": "^5.4.1",
     "chance": "^1.1.8",
     "cli-progress": "^3.10.1",
-    "mongodb": "6.9.0"
+    "js-yaml": "^4.1.0",
+    "mongodb": "6.9.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/bun": "1.1.9"
