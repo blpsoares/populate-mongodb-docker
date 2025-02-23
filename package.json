@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "up:db": "docker run -d --name populate-fakedb -v mongo-data:/data/db -p 27017:27017 mongo",
+    "populate": "bun ./src/app.ts",
     "down:db": "docker stop populate-fakedb",
     "rm:container": "docker rm -f populate-fakedb",
     "rm:volume": "docker volume rm -f populate-fakedb_mongo-data",
-    "rm:all": "npm run clean:container && bun run clean:volume",
+    "rm:all": "bun run rm:container && bun run rm:volume",
     "gen:bin": "bun build ./src/app.ts --compile --outfile ./bin/populatedb && chmod +x ./bin/populatedb",
     "cp:bin": "cp ./bin/populatedb  ~/.local/bin && echo 'ALREADY TO USE: populatedb'",
-    "populate": "npm run up:db && ./bin/populatedb"
+    "build:image": "docker build -t populate-fakedb .",
+    "create:container": "docker run -d --name populate-fakedb -v mongo-data:/data/db -p 27017:27017 populate-fakedb",
+    "custom": "npm run build:image && npm run create:container && docker exec -it populate-fakedb bash"
   },
   "dependencies": {
     "bottleneck": "^2.19.5",
