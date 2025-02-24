@@ -22,7 +22,6 @@ Project structure
 ├── README.md
 ├── bun.lockb
 ├── config.yml
-├── docker-compose.yml
 ├── package-lock.json
 ├── package.json
 └── tsconfig.json
