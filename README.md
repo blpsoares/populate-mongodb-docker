@@ -58,6 +58,7 @@ Or, in your shell
     "rm:all": "bun run rm:container && bun run rm:volume",
     "gen:bin": "bun build ./src/app.ts --compile --outfile ./bin/populatedb && chmod +x ./bin/populatedb",
     "cp:bin": "cp ./bin/populatedb  ~/.local/bin && echo 'ALREADY TO USE: populatedb'",
+    "bin": "bun run gen:bin && bun run cp:bin",
     "build:image": "docker build -t populate-fakedb",
     "create": "docker run -d --name populate-fakedb -v mongo-data:/data/db -p 27017:27017 populate-fakedb",
     "custom": "npm run build:image && npm run create:container && docker exec -it populate-fakedb bash"
@@ -106,6 +107,11 @@ Or, in your shell
 
 - **Command**: `cp ./bin/populatedb  ~/.local/bin && echo 'ALREADY TO USE: populatedb'`
 - **Description**: Copy binary file to `~/.local/bin`.
+
+#### `bin`
+
+- **Command**: `bun run gen:bin && bun run cp:bin` > NEEDS BUN
+- **Description**: Generate and copy bin file`.
 
 
 ---
