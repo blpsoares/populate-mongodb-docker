@@ -6,6 +6,7 @@ import {
 } from "./generate-documents.js";
 import { insertDocuments } from "./insert-documents.js";
 import type { Options } from "../types/index.js";
+import chalk from "chalk";
 
 export const populateDB = async (options: Options) => {
   let simpleCollectionsPromises: Promise<void>[] = []
@@ -18,7 +19,7 @@ export const populateDB = async (options: Options) => {
 
   const multiBar = new cliProgress.MultiBar({
     format:
-      "{collectionName} | {bar} | {percentage}% | {duration_formatted} | {value}/{total}",
+      chalk.white.bold("{collectionName} | {bar} | {percentage}% | {duration_formatted} | {value}/{total}"),
     barCompleteChar: "※",
     barIncompleteChar: "⁍",
   });
@@ -54,5 +55,5 @@ export const populateDB = async (options: Options) => {
     ...complexCollectionsPromises,
   ]);
   multiBar.stop();
-  console.log("Banco de dados populado com sucesso!");
+  console.log(chalk.bold.greenBright("\n[ Database ] Population completed!"));
 };
