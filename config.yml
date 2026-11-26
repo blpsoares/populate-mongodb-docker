@@ -2,6 +2,8 @@ dbUri: "mongodb://localhost:27017"
 dbName: 'dbTeste'
 simpleCollections:
   - "simpleCollection"
+  - "simpleCollection2"
+  - "simpleCollection3"
 complexCollections:
   - "complexCollection"
   - "complexCollection2"
